@@ -1,22 +1,17 @@
 const express = require('express')
+const dotenv = require('dotenv')
 //Middleware
 const { graphqlHTTP } = require('express-graphql')
 const schema = require('./schema/schema')
 const mongoose = require('mongoose')
 const app = express()
+dotenv.config({ path: '.env' })
 
-// mongoose.connect(
-//   'mongodb+srv://temitope:gl0r10u51.mongodb@bookstore.z3kqh.mongodb.net/<dbname>?retryWrites=true&w=majority',
-//   { useNewUrlParser: true, useUnifiedTopology: true }
-// )
 mongoose
-  .connect(
-    'mongodb+srv://temitope:gl0r10u51@bookstore.z3kqh.mongodb.net/graphql-books',
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
+  .connect(process.env.REACT_APP_MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log('Connected to MongoDB Atlas'))
   .catch((err) => console.log('Error: ', err.message))
 
