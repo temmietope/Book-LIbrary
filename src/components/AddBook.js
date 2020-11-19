@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
-import { useQuery } from '@apollo/client'
-import { getAuthorsQuery } from '../queries/queries'
+import { useQuery, useMutation } from '@apollo/client'
+import {
+  getAuthorsQuery,
+  addBookMutation,
+  getBooksQuery,
+} from '../queries/queries'
 
 const AddBook = () => {
   const [book, setBook] = useState({
@@ -8,13 +12,23 @@ const AddBook = () => {
     genre: '',
     authorId: '',
   })
+
   const onChange = (e) => {
     setBook({ ...book, [e.target.name]: e.target.value })
   }
 
+  const [addBookMut, { dataMutation }] = useMutation(addBookMutation)
+
   const onSubmit = (e) => {
     e.preventDefault()
-    console.log(book)
+    addBookMut({
+      variables: {
+        name: book.name,
+        genre: book.genre,
+        authorId: book.authorId,
+      },
+      refetchQueries: [{ query: getBooksQuery }],
+    })
   }
 
   const { loading, error, data } = useQuery(getAuthorsQuery)
